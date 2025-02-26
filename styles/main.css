@@ -91,3 +91,27 @@ ul li:before {
     border-radius: 8px;
     border-left: 4px solid #3498db;
 }
+.export-buttons {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.export-btn {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin: 0 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.export-btn:hover {
+    background-color: #2980b9;
+}
+
+.export-btn:active {
+    transform: translateY(1px);
+}
