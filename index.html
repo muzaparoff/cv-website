@@ -1,65 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sergei Muzyukin - Senior Infrastructure Engineer</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
-    <link rel="stylesheet" href="styles/main.css">
-</head>
-
-<!-- Replace the existing script section with this new one -->
-<script>
-    function exportToDocx() {
-        const doc = new docx.Document({
-            sections: [{
-                properties: {},
-                children: [
-                    new docx.Paragraph({
-                        children: [
-                            new docx.TextRun({
-                                text: document.querySelector('.container').innerText,
-                            }),
-                        ],
-                    }),
-                ],
-            }],
-        });
-
-        docx.Packer.toBlob(doc).then(blob => {
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'Sergei_Muzyukin_CV.docx';
-            document.body.appendChild(a);
-            a.click();
-            window.URL.revokeObjectURL(url);
-            document.body.removeChild(a);
-        });
-    }
-
-    function exportToTxt() {
-        const content = document.querySelector('.container').innerText;
-        const blob = new Blob([content], { type: 'text/plain' });
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'Sergei_Muzyukin_CV.txt';
-        document.body.appendChild(a);
-        a.click();
-        window.URL.revokeObjectURL(url);
-        document.body.removeChild(a);
-    }
-</script>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Sergei Muzyukin - Senior Infrastructure Engineer</title>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+        <link rel="icon" type="image/x-icon" href="favicon.ico">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+        <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+        <link rel="stylesheet" href="styles/main.css">
+    </head>
 <body>
     <div class="container">
         <h1>Sergei Muzyukin</h1>
-        <!-- Add export buttons below the title -->
         <div class="export-buttons">
-            <button onclick="exportToDocx()" class="export-btn">Export to DOCX</button>
+            <button onclick="exportToPdf()" class="export-btn">Export to PDF</button>
             <button onclick="exportToTxt()" class="export-btn">Export to TXT</button>
         </div>
         <div class="profile-summary">
@@ -220,20 +175,18 @@
         </div>
     </div>
 
-    <!-- Add this script before closing body tag -->
     <script>
-        function exportToDocx() {
-            const content = document.querySelector('.container').innerHTML;
-            const converted = htmlDocx.asBlob(content);
-            const blob = new Blob([converted], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'Sergei_Muzyukin_CV.docx';
-            document.body.appendChild(a);
-            a.click();
-            window.URL.revokeObjectURL(url);
-            document.body.removeChild(a);
+        function exportToPdf() {
+            window.jsPDF = window.jspdf.jsPDF;
+            html2canvas(document.querySelector('.container')).then(canvas => {
+                const imgData = canvas.toDataURL('image/png');
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                const imgProps = pdf.getImageProperties(imgData);
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+                pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+                pdf.save('Sergei_Muzyukin_CV.pdf');
+            });
         }
 
         function exportToTxt() {
